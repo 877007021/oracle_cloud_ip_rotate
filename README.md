@@ -14,13 +14,13 @@ Oracle cloud 国内IP更换
 
 此配置是在申请 OCI 时自动生成的，具体申请过程请参考：https://github.com/877007021/oracle-cloud-network-tools
 
-| 配置        | 描述 | 必须 |
-| ----------- | ---- | ---- |
-| user        |      | 是   |
-| fingerprint |      | 是   |
-| tenancy     |      | 是   |
-| region      |      | 是   |
-| key_file    |      | 是   |
+| 配置        | 描述                                                         | 必须 |
+| ----------- | ------------------------------------------------------------ | ---- |
+| user        |                                                              | 是   |
+| fingerprint |                                                              | 是   |
+| tenancy     |                                                              | 是   |
+| region      |                                                              | 是   |
+| key_file    | 申请 OCI 时下载的 pem 文件，项目默认使用 oci.pem，如果名称不一致请更改 | 是   |
 
 ### oracle
 
