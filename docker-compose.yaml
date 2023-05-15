@@ -1,0 +1,15 @@
+version: '3.6'
+services:
+  oracle_cloud_ip_rotate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: oracle_cloud_ip_rotate:latest
+    container_name: oracle_cloud_ip_rotate
+    restart: on-failure
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./config.ini:/app/config.ini
+      - ./config.ini:/app/oci.pem
+    environment:
+      - config_path=/app/config.ini

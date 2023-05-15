@@ -8,6 +8,14 @@ Oracle cloud 国内IP更换
 
 项目所用到的配置统一在 `config.ini ` 配置文件当中，请根据实际情况自行调整配置
 
+### 框架
+
+- 定时任务：APScheduler
+
+- OCI
+- Requests
+- chardet
+
 ## 配置
 
 ### DEFAULT
@@ -42,15 +50,16 @@ cloudflare 的配置信息，用于更改 cloudflare 的 DNS 解析记录
 
 检测 IP ping 的延迟，默认 200
 
-| 配置  | 描述                                          | 必须 |
-| ----- | --------------------------------------------- | ---- |
-| delay | 延迟，ping 超过此延迟则认为无法连接，默认 200 | 否   |
+| 配置  | 描述                                              | 必须 |
+| ----- | ------------------------------------------------- | ---- |
+| delay | 延迟，ping 超过此延迟则认为无法连接，默认 200     | 否   |
+| cron  | cron 表达式，定时执行更新IP，不配置则进行单次更新 | 否   |
 
 ## 使用
 
 ### 本地
 
-``` she
+``` shell
 git clone https://github.com/877007021/oracle_cloud_ip_rotate.git
 cd oracle_cloud_ip_rotate
 # 修改配置信息
@@ -58,5 +67,36 @@ pip install -r requirements.txt
 python main.py
 ```
 
+### docker-compose
 
+``` shell
+git clone https://github.com/877007021/oracle_cloud_ip_rotate.git
+cd oracle_cloud_ip_rotate
+# 修改配置信息
+docker-compose up -d
+```
+
+#### docker-compose
+
+``` yaml
+version: '3.6'
+services:
+  oracle_cloud_ip_rotate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: oracle_cloud_ip_rotate:latest
+    container_name: oracle_cloud_ip_rotate
+    restart: on-failure
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./config.ini:/app/config.ini
+      - ./config.ini:/app/oci.pem
+    environment:
+      - config_path=/app/config.ini
+```
+
+`environment`:
+
+- config_path 配置config配置文件地址，如果按照默认配置可以不设置，使用默认配置
 

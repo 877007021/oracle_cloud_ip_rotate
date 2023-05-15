@@ -1,4 +1,5 @@
 import requests
+
 import config
 from util import log, is_empty
 
@@ -22,6 +23,10 @@ def get_dns_record(zone_id, api_key, dns_name):
 
 def update_dns_record_ip(zone_id, api_key, record, new_ip) -> bool:
     record_id = record['id']
+    content_ip = record['content']
+    if content_ip == new_ip:
+        log(f"更新IP: {new_ip}, DNS记录IP: {content_ip}。IP一致，跳过更新")
+        return False
     url = f'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}'
 
     headers = {

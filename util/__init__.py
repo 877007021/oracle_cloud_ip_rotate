@@ -1,9 +1,10 @@
-import subprocess
-import chardet
 import logging
-import time
-import struct
 import socket
+import struct
+import subprocess
+import time
+
+import chardet
 import select
 
 

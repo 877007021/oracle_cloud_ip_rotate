@@ -1,10 +1,19 @@
+import os
+import sys
 import time
+
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
+
 import cloudflare_api
 import oci_api
 from config import AppConfig
-from util import ping_ip, log, is_not_empty, ping
+from util import log, is_not_empty, ping, is_empty
 
-AppConfig.load("config.ini")
+config_path = os.getenv('config_path')
+if is_empty(config_path):
+    config_path = "config.ini"
+AppConfig.load(config_path)
 
 
 def switch_ip():
@@ -27,10 +36,27 @@ def switch_ip():
         switch_ip()
 
 
-if __name__ == '__main__':
-    print()
+def start():
     oci_api.init()
     switch_ip()
     log(f"更新IP成功，最新 IP 地址：{AppConfig.ip_address}")
     log("更新 cloudflare DNS 记录")
     cloudflare_api.update()
+
+
+def job():
+    cron = AppConfig.get("outer", "cron")
+    if is_empty(cron):
+        log("未配置定时任务，开始单次执行")
+        start()
+        sys.exit(0)
+    else:
+        log(f"创建定时任务成功，crontab: {cron}")
+        scheduler = BlockingScheduler()
+        scheduler.add_job(start, CronTrigger.from_crontab(cron))
+        scheduler.start()
+
+
+if __name__ == '__main__':
+    print()
+    job()
